@@ -1,7 +1,15 @@
+//EventListener to make a pig move through the farm
+document.addEventListener("keydown", movePig);
 
+let key = {
+    LEFT: 37, UP: 38, RIGHT: 39, DOWN:40
+};
+
+//Pulled 2d context from the canvas
 let vp = document.getElementById("villa_platzi");
 let paper = vp.getContext("2d");
 
+//Created variables to contain each image data
 let background = {
     url: "tile.png",
     cargaOK: false
@@ -22,6 +30,15 @@ let chicken = {
     cargaOK: false
 };
 
+let movingPig = {
+    url: "pig.png",
+    cargaOK: false,
+    xpig: 210,
+    ypig: 210
+};
+
+//initializated images in order to get their contexts to draw
+
 background.image = new Image();
 background.image.src = background.url;
 background.image.addEventListener("load", loadBackground);
@@ -37,6 +54,35 @@ pig.image.addEventListener("load", loadPig);
 chicken.image = new Image();
 chicken.image.src = chicken.url;
 chicken.image.addEventListener("load", loadChicken);
+
+movingPig.image = new Image();
+movingPig.image.src = movingPig.url;
+movingPig.image.addEventListener("load", movePig)
+
+//Function to change the position of the moving pig
+function movePig(event)
+{
+    switch(event.keyCode) {
+        case key.LEFT:
+            movingPig.xpig = movingPig.xpig - 5;
+            break;
+        case key.UP:
+            movingPig.ypig = movingPig.ypig - 5;
+            break;
+        case key.RIGHT:
+            movingPig.xpig = movingPig.xpig + 5;
+            break;
+        case key.DOWN:
+            movingPig.ypig = movingPig.ypig + 5;
+            break;
+        default: 
+        break;
+    }
+
+    movingPig.cargaOK = true;
+    draw();
+    
+}
 
 // Wait to load and then draw the images on the canvas
 
@@ -57,7 +103,7 @@ function loadChicken() {
     draw();
 }
 
-//Draws the tile first and then random amount of animals
+//Draws the tile first and then a random amount of animals
 function draw()
 {
     if (background.cargaOK)
@@ -94,10 +140,14 @@ function draw()
             paper.drawImage(chicken.image, x, y)
         }
     }
-    
+    if (movingPig.cargaOK)
+    {
+        paper.drawImage(movingPig.image, movingPig.xpig, movingPig.ypig)
+    }
 
 }
 
+//Function to get randon numbers
 function random(min, max)
 {
     let result = 0;
